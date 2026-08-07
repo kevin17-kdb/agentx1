@@ -145,7 +145,7 @@ export default function DashboardPage() {
                 color: 'var(--paper-text-on-forest)',
               }}
             >
-              30D
+              30 Days
             </span>
           </div>
 
@@ -207,16 +207,16 @@ export default function DashboardPage() {
                 }}
               >
                 <span>Academic · Events · Placement</span>
-                <span>Δ 30D · Live</span>
+                <span>Δ 30 Days · Live</span>
               </div>
             </div>
 
             {/* Minibox: Actions */}
             <div style={{ background: 'var(--forest-2)', border: '1px solid var(--forest-line)', borderRadius: 14, padding: 18, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div className="mono" style={{ fontSize: 9.5, letterSpacing: '0.07em', color: '#8FA089', textTransform: 'uppercase', marginBottom: 13 }}>
-                Actions
+                Quick Actions
               </div>
-              <div>
+              <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
                 <button
                   onClick={() => nav('/chat')}
                   style={{
@@ -226,15 +226,14 @@ export default function DashboardPage() {
                     background: 'var(--lime)',
                     color: 'var(--lime-ink)',
                     fontWeight: 700,
-                    fontSize: 13,
+                    fontSize: 12.5,
                     padding: '9px 16px',
                     borderRadius: 100,
                     border: 'none',
-                    marginRight: 8,
                     cursor: 'pointer',
                   }}
                 >
-                  Sign in →
+                  Open Chat →
                 </button>
                 <button
                   onClick={() => nav('/knowledge')}
@@ -245,14 +244,14 @@ export default function DashboardPage() {
                     background: 'transparent',
                     color: 'var(--paper-text-on-forest)',
                     fontWeight: 600,
-                    fontSize: 13,
+                    fontSize: 12.5,
                     padding: '9px 16px',
                     borderRadius: 100,
                     border: '1px solid var(--forest-line)',
                     cursor: 'pointer',
                   }}
                 >
-                  Try demo
+                  Knowledge Base
                 </button>
               </div>
             </div>
@@ -260,25 +259,25 @@ export default function DashboardPage() {
             {/* Minibox: Range */}
             <div style={{ background: 'var(--forest-2)', border: '1px solid var(--forest-line)', borderRadius: 14, padding: 18, display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
               <div className="mono" style={{ fontSize: 9.5, letterSpacing: '0.07em', color: '#8FA089', textTransform: 'uppercase', marginBottom: 13 }}>
-                Range
+                Time Range
               </div>
               <div style={{ display: 'flex', gap: 6 }}>
                 {[
-                  { t: '7D', on: false },
-                  { t: '30D', on: true },
-                  { t: 'QTR', on: false },
+                  { t: '7 Days', on: false },
+                  { t: '30 Days', on: true },
+                  { t: 'Quarter', on: false },
                 ].map((tab) => (
                   <span
                     key={tab.t}
-                    className="mono"
                     style={{
                       fontSize: 11,
-                      padding: '7px 13px',
+                      padding: '7px 11px',
                       borderRadius: 100,
                       color: tab.on ? 'var(--lime-ink)' : '#8FA089',
                       background: tab.on ? 'var(--lime)' : 'transparent',
                       border: `1px solid ${tab.on ? 'var(--lime)' : 'var(--forest-line)'}`,
-                      fontWeight: tab.on ? 700 : 400,
+                      fontWeight: tab.on ? 700 : 500,
+                      fontFamily: 'Inter, sans-serif',
                     }}
                   >
                     {tab.t}
