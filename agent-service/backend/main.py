@@ -1,6 +1,6 @@
 """
 FastAPI Server Entrypoint for Smart Campus Multi-Agent AI System
-Vasavi College of Engineering
+XYZ Engineering College
 """
 
 import uvicorn
@@ -15,7 +15,7 @@ from backend.data.mock_db import STUDENT_PROFILES, CAMPUS_EVENTS, INTERNSHIP_LIS
 
 app = FastAPI(
     title="Smart Campus Multi-Agent AI System API",
-    description="AgentX Hackathon 2026 - Vasavi College of Engineering",
+    description="AgentX Hackathon 2026 - XYZ Engineering College",
     version="1.0.0"
 )
 
@@ -45,7 +45,7 @@ def read_root():
     return {
         "status": "online",
         "system": "Smart Campus Multi-Agent AI System",
-        "institution": "Vasavi College of Engineering",
+        "institution": "XYZ Engineering College",
         "version": "1.0.0"
     }
 

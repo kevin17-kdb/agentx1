@@ -46,6 +46,10 @@ class OrchestratorAgent:
         elif "examination regulations" in query_lower or "makeup exam" in query_lower or "attendance eligibility" in query_lower:
             return self._execute_scenario_2(user_query, student_id, is_hindi)
 
+        # Attendance calculation query
+        elif any(k in query_lower for k in ["attendance percentage", "my attendance", "show my attendance", "calculate my attendance", "check my attendance", "how much is my attendance", "attendance status"]) or query_lower.strip() in ["attendance", "attendance%"]:
+            return self._execute_attendance_query(user_query, student_id, is_hindi)
+
         # Benchmark Scenario 3: Today's classes + AI workshops + Machine learning clubs
         elif "today's classes" in query_lower or "workshops" in query_lower or "machine learning" in query_lower:
             return self._execute_scenario_3(user_query, student_id, is_hindi)
@@ -230,7 +234,7 @@ I am your **Smart Campus Multi-Agent System** — 6 specialized agents working t
 
         # Step 4: Communication Agent (Draft Email -> Requires HITL Approval)
         email_res = self.agents.communication_calendar_agent("draft_email", {
-            "recipient": "Dean of Examinations <examdean@vasavi.edu.in>",
+            "recipient": "Dean of Examinations <examdean@xyz.edu.in>",
             "subject": "Request for Permission for Makeup Examination - Alex Chen (1602-23-733-042)",
             "reason": "Satisfactory attendance record (82.4%) and sanctioned placement orientation collision."
         }, student_id)
@@ -269,6 +273,59 @@ I am your **Smart Campus Multi-Agent System** — 6 specialized agents working t
             "agent_logs": logs,
             "hitl_pending": True,
             "hitl_payload": email_res["data"]
+        }
+
+    def _execute_attendance_query(self, user_query: str, student_id: str, is_hindi: bool = False) -> Dict[str, Any]:
+        start_time = time.time()
+        student = STUDENT_PROFILES.get(student_id, STUDENT_PROFILES["S101"])
+        academic_res = self.agents.academic_agent("calculate_attendance", {}, student_id)
+
+        execution_graph = {
+            "nodes": [
+                {"id": "step_1", "agent": "Orchestrator Agent", "label": "Parse Attendance Query Intent", "status": "completed"},
+                {"id": "step_2", "agent": "Academic Agent", "label": "Calculate Attendance Percentage & Status", "status": "completed"}
+            ],
+            "edges": [
+                {"from": "step_1", "to": "step_2"}
+            ]
+        }
+
+        logs = [
+            {"agent": "Orchestrator Agent", "action": "Intent Recognition", "details": f"Routing query to Academic Agent for {student['name']}'s attendance calculation."},
+            {"agent": "Academic Agent", "action": "Attendance Metric", "details": academic_res["summary"]}
+        ]
+
+        data = academic_res["data"]
+        pct = student["attendance_percentage"]
+        attended = student["attended_classes"]
+        total = student["total_classes"]
+        status = data["status"]
+        missed_5 = data["missed_5_classes_projection"]
+
+        status_badge = "✅ **ELIGIBLE**" if pct >= 75.0 else ("⚠️ **CONDONATION REQUIRED**" if pct >= 65.0 else "❌ **DETAINED**")
+
+        final_response = f"""### 📊 Attendance Percentage & Academic Status
+
+**Student**: {student['name']} ({student['roll_number']}) — *{student['branch']}*
+
+- 📈 **Current Attendance**: **{pct}%** ({attended} / {total} classes attended)
+- 📋 **Exam Eligibility Status**: {status_badge} ({status})
+- ⚠️ **Minimum Required for Exams**: 75.0%
+- 🔻 **Projection if 5 Classes Missed**: {missed_5}
+
+{"*Your attendance is above the 75% threshold. Keep up the good work!*" if pct >= 75.0 else "*Warning: Your attendance is below 75%. Please attend upcoming classes to avoid exam detention.*"}
+"""
+
+        self._remember(user_query, f"Attendance calculation for {student['name']}: {pct}% ({status})")
+
+        return {
+            "query": user_query,
+            "status": "success",
+            "execution_time_seconds": round(time.time() - start_time, 3),
+            "execution_graph": execution_graph,
+            "final_markdown_response": final_response,
+            "agent_logs": logs,
+            "hitl_pending": False
         }
 
     def _execute_scenario_3(self, user_query: str, student_id: str, is_hindi: bool = False) -> Dict[str, Any]:

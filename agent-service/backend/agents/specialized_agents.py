@@ -209,7 +209,7 @@ class SpecializedAgents:
         student = STUDENT_PROFILES.get(student_id, STUDENT_PROFILES["S101"])
 
         if action == "draft_email":
-            recipient = params.get("recipient", "Dean of Examinations <examdean@vasavi.edu.in>")
+            recipient = params.get("recipient", "Dean of Examinations <examdean@xyz.edu.in>")
             subject = params.get("subject", "Request for Permission for Makeup Examination")
             reason = params.get("reason", "Attendance calculation and sanctioned representation")
             
@@ -226,7 +226,7 @@ Student Details:
 Reason:
 {reason}
 
-I have maintained satisfactory academic standing and request your kind approval per Section 4.4 of the Vasavi Academic Regulations.
+I have maintained satisfactory academic standing and request your kind approval per Section 4.4 of the XYZ Academic Regulations.
 
 Sincerely,
 {student['name']}
@@ -345,7 +345,7 @@ Contact: {student['email']}
                     "description": description,
                     "student_name": student["name"],
                     "expected_sla": "48 hours",
-                    "recipient": "student-services@vasavi.edu.in"
+                    "recipient": "student-services@xyz.edu.in"
                 },
                 "summary": f"Prepared grievance ticket {ticket_id} ({category}) for {student['name']}. Awaiting user confirmation (HITL)."
             }

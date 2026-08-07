@@ -1,6 +1,6 @@
 """
 Smart Campus Multi-Agent System - Mock Institutional Database
-Vasavi College of Engineering (Autonomous)
+XYZ Engineering College (Autonomous)
 """
 
 STUDENT_PROFILES = {
@@ -16,7 +16,7 @@ STUDENT_PROFILES = {
         "attendance_percentage": 82.4,
         "total_classes": 180,
         "attended_classes": 148,
-        "email": "alex.chen@vasavi.edu.in",
+        "email": "alex.chen@xyz.edu.in",
         "phone": "+91 98765 43210",
         "hostel_resident": True,
         "hostel_block": "B-Block, Room 304",
@@ -45,7 +45,7 @@ STUDENT_PROFILES = {
         "attendance_percentage": 91.0,
         "total_classes": 200,
         "attended_classes": 182,
-        "email": "priya.sharma@vasavi.edu.in",
+        "email": "priya.sharma@xyz.edu.in",
         "phone": "+91 98765 12345",
         "hostel_resident": False,
         "hostel_block": "Day Scholar",
@@ -68,7 +68,7 @@ STUDENT_PROFILES = {
         "attendance_percentage": 68.5,
         "total_classes": 160,
         "attended_classes": 110,
-        "email": "rahul.verma@vasavi.edu.in",
+        "email": "rahul.verma@xyz.edu.in",
         "phone": "+91 98765 99887",
         "hostel_resident": True,
         "hostel_block": "A-Block, Room 102",
@@ -194,7 +194,7 @@ CLUBS_AND_COMMUNITIES = [
         "focus": ["Machine Learning", "Deep Learning", "LLMs", "Computer Vision"],
         "lead": "Alex Chen & Prof. R. Sharma",
         "upcoming_meetup": "2026-08-12",
-        "contact": "mlag@vasavi.edu.in"
+        "contact": "mlag@xyz.edu.in"
     },
     {
         "id": "CLUB-02",
@@ -202,7 +202,7 @@ CLUBS_AND_COMMUNITIES = [
         "focus": ["Competitive Programming", "Algorithms", "Hackathons"],
         "lead": "Priya Sharma",
         "upcoming_meetup": "2026-08-10",
-        "contact": "acm@vasavi.edu.in"
+        "contact": "acm@xyz.edu.in"
     },
     {
         "id": "CLUB-03",
@@ -210,7 +210,7 @@ CLUBS_AND_COMMUNITIES = [
         "focus": ["Arduino", "Raspberry Pi", "ROS", "Drone Tech"],
         "lead": "K. Rajesh",
         "upcoming_meetup": "2026-08-15",
-        "contact": "robotics@vasavi.edu.in"
+        "contact": "robotics@xyz.edu.in"
     }
 ]
 
@@ -238,7 +238,7 @@ HOSTEL_DATA = {
         "Lunch": "12:30 - 02:00 PM",
         "Dinner": "07:30 - 09:30 PM"
     },
-    "warden_contact": "warden@vasavi.edu.in | Ext. 204",
+    "warden_contact": "warden@xyz.edu.in | Ext. 204",
     "laundry": "Saturday pickups, Ground Floor Office",
     "wifi": "VCE-ResNet SSID, credentials via intranet portal",
     "night_out_pass": "Submit 24 hours in advance via Student Portal, approved by Warden"

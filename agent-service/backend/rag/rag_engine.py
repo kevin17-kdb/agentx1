@@ -1,6 +1,6 @@
 """
 Retrieval-Augmented Generation (RAG) Engine for Institutional Knowledge
-Vasavi College of Engineering Document Store & Vector Search Engine
+XYZ Engineering College Document Store & Vector Search Engine
 """
 
 import re
@@ -10,7 +10,7 @@ from typing import List, Dict, Any
 INSTITUTIONAL_DOCUMENTS = [
     {
         "id": "DOC-ACAD-01",
-        "title": "Vasavi College Academic & Examination Regulations 2025-2026",
+        "title": "XYZ Engineering College Academic & Examination Regulations 2025-2026",
         "category": "Academic Regulations",
         "content": """
 Section 4: Examination Regulations & Attendance Requirements
@@ -45,7 +45,7 @@ Section 2: Internship & Placement Eligibility Criteria
 Section 7: Hostel Guidelines & Transport Services
 7.1 Curfew & Gate Passes: In-time for campus hostels is 08:30 PM for all residents. Night out passes must be submitted 24 hours in advance via the Student Portal and approved by the Warden.
 7.2 Merit Scholarships: Management Merit Scholarship awards ₹25,000 per annum to top 3 rankers in each branch. Apply before September 30 with marksheet copies.
-7.3 Grievances: Infrastructure, mess quality, or Wi-Fi complaints must be logged under Student Services Agent or filed at student-services@vasavi.edu.in. Average resolution SLA is 48 hours.
+7.3 Grievances: Infrastructure, mess quality, or Wi-Fi complaints must be logged under Student Services Agent or filed at student-services@xyz.edu.in. Average resolution SLA is 48 hours.
         """
     }
 ]

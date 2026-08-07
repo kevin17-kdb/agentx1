@@ -4,7 +4,7 @@ A prototype multi-agent AI assistant for a smart campus, built for the **AgentX 
 
 The system coordinates **6 specialized agents** through an **orchestrator** that plans tasks, calls tools, retrieves institutional policies with a keyword-based RAG engine, retains session memory, and gates high-stakes actions (emails, grievance tickets) behind **Human-in-the-Loop (HITL)** approval.
 
-> Project by: **Vasavi College of Engineering — HackerRank Campus Crew**
+> Project by: **XYZ Engineering College — HackerRank Campus Crew**
 
 ---
 
