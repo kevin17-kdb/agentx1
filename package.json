@@ -1,0 +1,17 @@
+{
+  "name": "agentx",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AgentX Smart Campus Multi-Agent System - MERN + Python agents",
+  "scripts": {
+    "dev": "concurrently -k -n API,AGENT,UI -c cyan,magenta,green \"npm:api\" \"npm:agent\" \"npm:ui\"",
+    "api": "node server/src/server.js",
+    "agent": "python agent-service/api.py",
+    "ui": "npm --prefix client run dev",
+    "build": "npm --prefix client run build",
+    "seed": "npm --prefix server run seed"
+  },
+  "devDependencies": {
+    "concurrently": "^9.0.0"
+  }
+}

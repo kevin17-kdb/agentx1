@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.pyo
+.DS_Store
+*.log
+
+# Dependencies
+node_modules/
+client/node_modules/
+server/node_modules/
+
+# Environment
+server/.env
+
+# Build output
+client/dist/

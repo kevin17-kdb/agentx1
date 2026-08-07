@@ -1,0 +1,56 @@
+:root {
+  /* ── Paper & Forest palette (demo "Field System") ─────────────────── */
+  --paper: #F2EFE6;
+  --paper-line: #DEDACB;
+  --surface: #FFFFFF;
+  --ink: #1B241C;
+  --ink-soft: #5C6459;
+  --lime: #CFEE4E;
+  --lime-ink: #26310F;
+  --moss: #4B5D48;
+  --forest: #16241C;
+  --forest-2: #1D2E22;
+  --forest-line: #2C3E2F;
+  --paper-text-on-forest: #DCE6DA;
+
+  /* ── Semantic status colors (lime family) ──────────────────────────── */
+  --success: var(--lime);
+  --success-soft: rgba(207, 238, 78, 0.22);
+  --danger: #C0533D;
+  --danger-soft: rgba(192, 83, 61, 0.1);
+  --info: var(--lime);
+  --info-soft: rgba(207, 238, 78, 0.22);
+  --amber: var(--lime);
+  --amber-soft: rgba(207, 238, 78, 0.22);
+
+  /* ── Surface & text ────────────────────────────────────────────────── */
+  --bg-base: var(--paper);
+  --bg-surface: var(--surface);
+  --bg-raised: var(--forest-2);
+  --bg-inset: var(--forest);
+  --border-subtle: var(--paper-line);
+  --border-strong: #C9C2B0;
+  --text-primary: var(--ink);
+  --text-secondary: var(--ink-soft);
+  --text-muted: #8B928A;
+
+  /* ── Typography ───────────────────────────────────────────────────── */
+  --font-display: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-body: 'Manrope', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'Cascadia Code', monospace;
+
+  /* ── Layout metrics ──────────────────────────────────────────────── */
+  --topbar-height: 79px;
+  --content-max: 1300px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 18px;
+  --radius-full: 999px;
+  --shadow-card: 0 30px 60px -35px rgba(27, 36, 28, 0.25);
+  --shadow-glow: 0 0 24px rgba(207, 238, 78, 0.25);
+
+  /* ── Motion ───────────────────────────────────────────────────────── */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur-fast: 120ms;
+  --dur-med: 200ms;
+}

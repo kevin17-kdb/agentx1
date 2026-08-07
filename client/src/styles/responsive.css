@@ -1,0 +1,37 @@
+.loginbox-wrap {
+  padding: 90px 20px;
+  max-width: 520px;
+  width: 100%;
+  margin: 0 auto;
+}
+
+.student-grid {
+  grid-template-columns: 2fr 1fr;
+}
+
+@media (max-width: 1050px) {
+  .student-grid {
+    grid-template-columns: 1fr;
+  }
+  .topbar-pulse {
+    display: none;
+  }
+  .chatwrap {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 900px) {
+  .cardgrid {
+    grid-template-columns: 1fr 1fr !important;
+  }
+}
+
+@media (max-width: 700px) {
+  .cardgrid {
+    grid-template-columns: 1fr !important;
+  }
+  .topbar-pulse {
+    display: none;
+  }
+}

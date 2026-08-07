@@ -1,0 +1,37 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "AgentX: Run All (MERN + Python)",
+      "type": "node",
+      "request": "launch",
+      "runtimeExecutable": "npm",
+      "runtimeArgs": ["run", "dev"],
+      "console": "integratedTerminal",
+      "cwd": "${workspaceFolder}",
+      "presentation": {
+        "group": "agentx",
+        "order": 1
+      }
+    },
+    {
+      "name": "AgentX: Express API only (:8000)",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/server/src/server.js",
+      "cwd": "${workspaceFolder}/server",
+      "console": "integratedTerminal",
+      "skipFiles": ["<node_internals>/**"],
+      "presentation": {
+        "group": "agentx",
+        "order": 2
+      }
+    }
+  ],
+  "compounds": [
+    {
+      "name": "AgentX: Full Stack",
+      "configurations": ["AgentX: Run All (MERN + Python)"]
+    }
+  ]
+}
