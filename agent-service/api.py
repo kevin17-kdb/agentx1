@@ -1,4 +1,4 @@
-﻿"""
+"""
 Zero-Dependency Agent Service for Smart Campus Multi-Agent System
 Exposes the Python agents + RAG + mock data as a JSON REST API.
 Called by the Express gateway (server/). Port 8100.
@@ -62,83 +62,89 @@ class AgentServiceHandler(http.server.BaseHTTPRequestHandler):
             return {}
 
     def do_GET(self):
-        path = urllib.parse.urlparse(self.path).path
+        try:
+            path = urllib.parse.urlparse(self.path).path
 
-        if path == "/health":
-            self._send_json({
-                "status": "healthy",
-                "agents_loaded": 7,
-                "rag_documents": len(rag_engine.documents),
-                "memory_entries": len(orchestrator.conversation_memory)
-            })
-        elif path == "/memory":
-            self._send_json({"memory_entries": orchestrator.conversation_memory})
-        elif path == "/actionlog":
-            self._send_json({"actions": ACTION_LOG[-50:], "total": len(ACTION_LOG)})
-        elif path == "/students":
-            self._send_json({"students": list(STUDENT_PROFILES.values())})
-        elif path == "/events":
-            self._send_json({"events": CAMPUS_EVENTS})
-        elif path == "/internships":
-            self._send_json({"internships": INTERNSHIP_LISTINGS})
-        elif path == "/scholarships":
-            self._send_json({"scholarships": SCHOLARSHIPS})
-        elif path == "/transport":
-            self._send_json({"routes": TRANSPORT_ROUTES})
-        elif path == "/faqs":
-            self._send_json({"faqs": CAMPUS_FAQS})
-        elif path == "/grievances":
-            self._send_json({"grievances": GRIEVANCE_TICKETS})
-        else:
-            self._send_json({"error": "Not found"}, 404)
+            if path == "/health":
+                self._send_json({
+                    "status": "healthy",
+                    "agents_loaded": 7,
+                    "rag_documents": len(rag_engine.documents),
+                    "memory_entries": len(orchestrator.conversation_memory)
+                })
+            elif path == "/memory":
+                self._send_json({"memory_entries": orchestrator.conversation_memory})
+            elif path == "/actionlog":
+                self._send_json({"actions": ACTION_LOG[-50:], "total": len(ACTION_LOG)})
+            elif path == "/students":
+                self._send_json({"students": list(STUDENT_PROFILES.values())})
+            elif path == "/events":
+                self._send_json({"events": CAMPUS_EVENTS})
+            elif path == "/internships":
+                self._send_json({"internships": INTERNSHIP_LISTINGS})
+            elif path == "/scholarships":
+                self._send_json({"scholarships": SCHOLARSHIPS})
+            elif path == "/transport":
+                self._send_json({"routes": TRANSPORT_ROUTES})
+            elif path == "/faqs":
+                self._send_json({"faqs": CAMPUS_FAQS})
+            elif path == "/grievances":
+                self._send_json({"grievances": GRIEVANCE_TICKETS})
+            else:
+                self._send_json({"error": "Not found"}, 404)
+        except Exception as e:
+            self._send_json({"error": str(e)}, 500)
 
     def do_POST(self):
-        path = urllib.parse.urlparse(self.path).path
-        body = self._read_body()
+        try:
+            path = urllib.parse.urlparse(self.path).path
+            body = self._read_body()
 
-        if path == "/chat":
-            query = body.get("query", "")
-            student_id = body.get("student_id", "S101")
-            result = orchestrator.process_query(user_query=query, student_id=student_id)
-            result["action_log"] = ACTION_LOG[-8:]
-            self._send_json(result)
+            if path == "/chat":
+                query = body.get("query", "")
+                student_id = body.get("student_id", "S101")
+                result = orchestrator.process_query(user_query=query, student_id=student_id)
+                result["action_log"] = ACTION_LOG[-8:]
+                self._send_json(result)
 
-        elif path == "/rag/search":
-            query = body.get("query", "")
-            top_k = body.get("top_k", 3)
-            results = rag_engine.search(query=query, top_k=top_k)
-            self._send_json({"query": query, "results": results})
+            elif path == "/rag/search":
+                query = body.get("query", "")
+                top_k = body.get("top_k", 3)
+                results = rag_engine.search(query=query, top_k=top_k)
+                self._send_json({"query": query, "results": results})
 
-        elif path == "/hitl/respond":
-            draft_id = body.get("draft_id", "")
-            action = body.get("action", "approve")
-            for ticket in GRIEVANCE_TICKETS:
-                if ticket.get("ticket_id") == draft_id:
-                    ticket["status"] = "submitted" if action == "approve" else "cancelled"
-            if action == "approve":
-                log_action("Human-In-The-Loop", "approve",
-                           f"User APPROVED draft {draft_id} â€” dispatched to recipient.", entity_id=draft_id)
-                self._send_json({
-                    "status": "approved",
-                    "message": f"Email draft {draft_id} approved and dispatched to Dean of Examinations.",
-                    "timestamp": "2026-08-07 14:02:00"
-                })
+            elif path == "/hitl/respond":
+                draft_id = body.get("draft_id", "")
+                action = body.get("action", "approve")
+                for ticket in GRIEVANCE_TICKETS:
+                    if ticket.get("ticket_id") == draft_id:
+                        ticket["status"] = "submitted" if action == "approve" else "cancelled"
+                if action == "approve":
+                    log_action("Human-In-The-Loop", "approve",
+                               f"User APPROVED draft {draft_id} — dispatched to recipient.", entity_id=draft_id)
+                    self._send_json({
+                        "status": "approved",
+                        "message": f"Email draft {draft_id} approved and dispatched to Dean of Examinations.",
+                        "timestamp": "2026-08-07 14:02:00"
+                    })
+                else:
+                    self._send_json({
+                        "status": "rejected",
+                        "message": f"Draft {draft_id} rejected by user.",
+                        "timestamp": "2026-08-07 14:02:00"
+                    })
+
             else:
-                self._send_json({
-                    "status": "rejected",
-                    "message": f"Draft {draft_id} rejected by user.",
-                    "timestamp": "2026-08-07 14:02:00"
-                })
-
-        else:
-            self._send_json({"error": "Endpoint not found"}, 404)
+                self._send_json({"error": "Endpoint not found"}, 404)
+        except Exception as e:
+            self._send_json({"error": str(e)}, 500)
 
 
 if __name__ == "__main__":
-    socketserver.TCPServer.allow_reuse_address = True
+    socketserver.ThreadingTCPServer.allow_reuse_address = True
     print(f"Agent Service starting on http://localhost:{PORT}")
     try:
-        with socketserver.TCPServer(("", PORT), AgentServiceHandler) as httpd:
+        with socketserver.ThreadingTCPServer(("0.0.0.0", PORT), AgentServiceHandler) as httpd:
             httpd.serve_forever()
     except KeyboardInterrupt:
         print("\nShutting down agent service.")
