@@ -50,19 +50,27 @@ class OrchestratorAgent:
         elif any(k in query_lower for k in ["attendance percentage", "my attendance", "show my attendance", "calculate my attendance", "check my attendance", "how much is my attendance", "attendance status"]) or query_lower.strip() in ["attendance", "attendance%"]:
             return self._execute_attendance_query(user_query, student_id, is_hindi)
 
-        # Benchmark Scenario 3: Today's classes + AI workshops + Machine learning clubs
-        elif "today's classes" in query_lower or "workshops" in query_lower or "machine learning" in query_lower:
-            return self._execute_scenario_3(user_query, student_id, is_hindi)
+        # Events / Workshops / Hackathons / Clubs
+        elif any(k in query_lower for k in ["event", "events", "workshop", "workshops", "hackathon", "club", "clubs", "activity", "activities", "seminar", "webinar"]):
+            return self._execute_events_query(user_query, student_id, is_hindi)
 
-        # Scenario 4: Student Services (hostel / scholarships / grievance / transport / faqs)
-        elif any(k in query_lower for k in ["grievance", "complaint", "hostel", "scholarship", "scholarships", "transport", "bus route", "faq", "campus services"]):
+        # Internships / Placements / Jobs
+        elif any(k in query_lower for k in ["internship", "internships", "placement", "placements", "job", "jobs", "hiring", "tier-1", "tier 1"]):
+            return self._execute_internships_query(user_query, student_id, is_hindi)
+
+        # Timetable / Schedule / Today's classes
+        elif any(k in query_lower for k in ["today's classes", "timetable", "schedule", "my classes", "today classes", "class schedule"]):
+            return self._execute_timetable_query(user_query, student_id, is_hindi)
+
+        # Student Services (hostel / scholarships / grievance / transport / faqs)
+        elif any(k in query_lower for k in ["grievance", "complaint", "hostel", "scholarship", "scholarships", "transport", "bus route", "faq", "faqs", "campus services"]):
             return self._execute_student_services(user_query, student_id, is_hindi)
 
-        # Scenario 5: Personalized recommendations
+        # Personalized recommendations
         elif any(k in query_lower for k in ["recommend", "suggest", "electives", "courses", "resume", "improve my", "personalized"]):
             return self._execute_recommendations(user_query, student_id, is_hindi)
 
-        # General Multi-Agent Handler
+        # General Multi-Agent / RAG Handler
         else:
             return self._execute_general_query(user_query, student_id, is_hindi)
 
@@ -317,6 +325,163 @@ I am your **Smart Campus Multi-Agent System** — 6 specialized agents working t
 """
 
         self._remember(user_query, f"Attendance calculation for {student['name']}: {pct}% ({status})")
+
+        return {
+            "query": user_query,
+            "status": "success",
+            "execution_time_seconds": round(time.time() - start_time, 3),
+            "execution_graph": execution_graph,
+            "final_markdown_response": final_response,
+            "agent_logs": logs,
+            "hitl_pending": False
+        }
+
+    def _execute_events_query(self, user_query: str, student_id: str, is_hindi: bool = False) -> Dict[str, Any]:
+        start_time = time.time()
+        student = STUDENT_PROFILES.get(student_id, STUDENT_PROFILES["S101"])
+        events_res = self.agents.events_agent("discover_events", {"query": user_query}, student_id)
+
+        execution_graph = {
+            "nodes": [
+                {"id": "step_1", "agent": "Orchestrator Agent", "label": "Parse Events Query Intent", "status": "completed"},
+                {"id": "step_2", "agent": "Events Agent", "label": "Search Campus Events & Clubs", "status": "completed"}
+            ],
+            "edges": [
+                {"from": "step_1", "to": "step_2"}
+            ]
+        }
+
+        logs = [
+            {"agent": "Orchestrator Agent", "action": "Intent Recognition", "details": f"Routing query to Events Agent for campus events & workshops lookup."},
+            {"agent": "Events Agent", "action": "Event Search", "details": events_res["summary"]}
+        ]
+
+        workshops = events_res["data"]["workshops"]
+        clubs = events_res["data"]["clubs"]
+
+        events_md = ""
+        for ev in workshops:
+            events_md += f"""- **{ev['title']}** ({ev['category']})
+  - 🗓️ **Date & Time**: {ev['date']} | {ev['time']}
+  - 📍 **Location**: {ev['location']}
+  - 🎙️ **Organizer**: {ev['organizer']}
+  - 🎟️ **Seats Remaining**: {ev.get('seats_left', 'Open')}
+"""
+
+        clubs_md = ""
+        for cl in clubs:
+            clubs_md += f"- **{cl['name']}** — Focus: {', '.join(cl['focus'])} (Lead: {cl['lead']} | Contact: `{cl['contact']}`)\n"
+
+        final_response = f"""### 📅 Upcoming Campus Events & Workshops
+
+Here are the active campus events, technical workshops, and hackathons:
+
+{events_md}
+
+#### 🤝 Active Student Clubs & Communities
+{clubs_md}
+
+*Tip: Type "Register for Google workshop" or ask about any specific event to reserve your seat!*
+"""
+
+        self._remember(user_query, f"Retrieved {len(workshops)} campus events and {len(clubs)} student clubs.")
+
+        return {
+            "query": user_query,
+            "status": "success",
+            "execution_time_seconds": round(time.time() - start_time, 3),
+            "execution_graph": execution_graph,
+            "final_markdown_response": final_response,
+            "agent_logs": logs,
+            "hitl_pending": False
+        }
+
+    def _execute_internships_query(self, user_query: str, student_id: str, is_hindi: bool = False) -> Dict[str, Any]:
+        start_time = time.time()
+        student = STUDENT_PROFILES.get(student_id, STUDENT_PROFILES["S101"])
+        placement_res = self.agents.placement_agent("check_eligibility", {"company": "Google"}, student_id)
+
+        execution_graph = {
+            "nodes": [
+                {"id": "step_1", "agent": "Orchestrator Agent", "label": "Parse Placement Query Intent", "status": "completed"},
+                {"id": "step_2", "agent": "Placement Agent", "label": "Check Internship Eligibility & Opportunities", "status": "completed"}
+            ],
+            "edges": [
+                {"from": "step_1", "to": "step_2"}
+            ]
+        }
+
+        logs = [
+            {"agent": "Orchestrator Agent", "action": "Intent Recognition", "details": f"Routing query to Placement Agent for internship listings & eligibility audit."},
+            {"agent": "Placement Agent", "action": "Placement Audit", "details": placement_res["summary"]}
+        ]
+
+        from backend.data.mock_db import INTERNSHIP_LISTINGS
+
+        internships_md = ""
+        for item in INTERNSHIP_LISTINGS:
+            eligible = student["gpa"] >= item["min_cgpa"] and student["year"] in item["eligible_years"]
+            status_tag = "✅ **ELIGIBLE**" if eligible else "⚠️ **MIN CGPA NOT MET**"
+            internships_md += f"""- **{item['company']}** — *{item['role']}* ({status_tag})
+  - 💰 **Stipend**: {item['stipend']} | ⏳ **Duration**: {item['duration']}
+  - 🎓 **Eligibility**: CGPA ≥ {item['min_cgpa']} | Years {item['eligible_years']}
+  - 📝 **Description**: {item['description']}
+"""
+
+        final_response = f"""### 💼 Campus Placement & Internship Opportunities
+
+Here are the active tier-1 internship drives available for your profile (**{student['name']}**, CGPA {student['gpa']}):
+
+{internships_md}
+
+*Ask "Am I eligible for Google?" or "Analyse my resume" to get a detailed placement audit!*
+"""
+
+        self._remember(user_query, f"Retrieved {len(INTERNSHIP_LISTINGS)} campus internship listings.")
+
+        return {
+            "query": user_query,
+            "status": "success",
+            "execution_time_seconds": round(time.time() - start_time, 3),
+            "execution_graph": execution_graph,
+            "final_markdown_response": final_response,
+            "agent_logs": logs,
+            "hitl_pending": False
+        }
+
+    def _execute_timetable_query(self, user_query: str, student_id: str, is_hindi: bool = False) -> Dict[str, Any]:
+        start_time = time.time()
+        student = STUDENT_PROFILES.get(student_id, STUDENT_PROFILES["S101"])
+        academic_res = self.agents.academic_agent("get_timetable", {"day": "Today"}, student_id)
+
+        execution_graph = {
+            "nodes": [
+                {"id": "step_1", "agent": "Orchestrator Agent", "label": "Parse Timetable Intent", "status": "completed"},
+                {"id": "step_2", "agent": "Academic Agent", "label": "Fetch Class Schedule & Room Info", "status": "completed"}
+            ],
+            "edges": [
+                {"from": "step_1", "to": "step_2"}
+            ]
+        }
+
+        logs = [
+            {"agent": "Orchestrator Agent", "action": "Intent Recognition", "details": f"Routing query to Academic Agent for {student['name']}'s timetable lookup."},
+            {"agent": "Academic Agent", "action": "Timetable Retrieval", "details": academic_res["summary"]}
+        ]
+
+        schedule = academic_res["data"]["schedule"]
+        schedule_md = ""
+        for cls in schedule:
+            schedule_md += f"- ⏰ **{cls['time']}**: **{cls['subject']}** — 📍 Room {cls['room']}\n"
+
+        final_response = f"""### 📅 Class Schedule & Timetable
+
+**Student**: {student['name']} — *{student['branch']}* (Today's Schedule)
+
+{schedule_md}
+"""
+
+        self._remember(user_query, f"Retrieved today's class schedule ({len(schedule)} classes).")
 
         return {
             "query": user_query,
